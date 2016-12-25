@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        <referenceBlock name="header.links">
+            <block class="GaussDev\Dropdown\Block\Dropdown" name="header.nav.Dropdown" after="wish-list-link" template="GaussDev_Dropdown::dropdown.phtml">
+
+                <block class="GaussDev\Dropdown\Block\Dropdown\LoggedIn" name="header.nav.Dropdown.loggedin" template="GaussDev_Dropdown::dropdown/loggedin.phtml"/>
+                <block class="GaussDev\Dropdown\Block\Dropdown\LoggedOut" name="header.nav.Dropdown.loggedout" template="GaussDev_Dropdown::dropdown/loggedout.phtml"/>
+            </block>
+        </referenceBlock>
+
+        <referenceBlock name="customer" remove="true" />
+        <referenceBlock name="header" remove="true" />
+
+        <move element="header" destination="header.links" before="-"/>
+        <move element="register-link" destination="header.links"/>
+
+        <move element="top.links" destination="header.nav.Dropdown.loggedin" />
+        <move element="my-account-link" destination="top.links" before="-"/>
+        <move element="authorization-link-login" destination="top.links" after="-"/>
+
+
+
+
+        <move element="catalog.compare.link" destination="header.links" before="-"/>
+        <move element="wish-list-link" destination="header.links" after="catalog.compare.link"/>
+    </body>
+</page>

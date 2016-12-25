@@ -1,0 +1,42 @@
+
+<?php
+/** @var $block \Magento\Customer\Block\Account\AuthorizationLink */
+?>
+<li class="customer-welcome">
+    <span class="customer-name Dropdown-toggle" id="customer-logIn-Dropdown"
+          role="link"
+          tabindex="0"
+          data-trigger-keypress-button="true">
+        <span>icon</span>
+    </span>
+
+    <div id="customer-Dropdown-menu" class="customer.menu Dropdown" data-target="Dropdown" style="display:none; z-index:10; position: absolute;">
+        <?php if(!$block->customerLoggedIn()): ?>
+            <?php echo $block->getChildHtml('header.nav.Dropdown.loggedout'); ?>
+        <?php else: ?>
+            <?php echo $block->getChildHtml('header.nav.Dropdown.loggedin'); ?>
+        <?php endif; ?>
+    </div>
+</li>
+
+
+<script>// <![CDATA[
+    require([
+        'jquery'
+    ], function ($) {
+        $(document).ready(function (e) {
+
+            $('#customer-logIn-Dropdown').on('click', function (event) {
+                $("#customer-Dropdown-menu").toggle();
+            });
+
+            $('body').on('click', function (e) {
+                if (!$('.customer-welcome').is(e.target) && $('.customer-welcome').has(e.target).length === 0)
+                {
+                    $('#customer-Dropdown-menu').hide();
+                }
+            });
+        });
+    });
+    // ]]>     
+</script>>
