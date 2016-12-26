@@ -7,29 +7,94 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
+        <referenceBlock name="header.links" remove="true"/>
+        <referenceBlock name="store.links" remove="true"/>
+        <referenceContainer name="header.panel" remove="true"/>
 
-        <referenceBlock name="header.links">
-            <block class="GaussDev\Dropdown\Block\Dropdown" name="header.nav.Dropdown" after="wish-list-link" template="GaussDev_Dropdown::dropdown.phtml">
 
-                <block class="GaussDev\Dropdown\Block\Dropdown\LoggedIn" name="header.nav.Dropdown.loggedin" template="GaussDev_Dropdown::dropdown/loggedin.phtml"/>
-                <block class="GaussDev\Dropdown\Block\Dropdown\LoggedOut" name="header.nav.Dropdown.loggedout" template="GaussDev_Dropdown::dropdown/loggedout.phtml"/>
-            </block>
+    <!--create the new panel to replace the old one-->
+        <referenceContainer name="header.panel.wrapper">
+            <container name="ganc.novi.panel" label="Page Header Panel With Dropdown" htmlTag="div" htmlClass="panel header">
+                <block class="Magento\Framework\View\Element\Html\Links" name="noviLinkovi">
+                    <arguments>
+                        <argument name="css_class" xsi:type="string">header links</argument>
+                    </arguments>
+
+                    <block class="GaussDev\Dropdown\Block\Dropdown" name="header.nav.Dropdown" after="wish-list-link" template="GaussDev_Dropdown::dropdown.phtml">
+
+                        <block class="GaussDev\Dropdown\Block\Dropdown\LoggedIn" name="header.nav.Dropdown.loggedin" template="GaussDev_Dropdown::dropdown/loggedin.phtml"/>
+                        <block class="GaussDev\Dropdown\Block\Dropdown\LoggedOut" name="header.nav.Dropdown.loggedout" template="GaussDev_Dropdown::dropdown/loggedout.phtml"/>
+                    </block>
+                </block>
+            </container>
+        </referenceContainer>
+    <!--/create the new panel to replace the old one-->
+
+
+    <!--add wishlist and my account links to the mobile menu -->
+        <referenceBlock name="navigation.sections">
+            <block class="GaussDev\Dropdown\Block\Dropdown\LoggedIn" name="linkovi.trgovine" group="navigation-sections" template="GaussDev_Dropdown::dropdown/loggedin.phtml">
+                <arguments>
+                    <argument name="title" translate="true" xsi:type="string">Account</argument>
+                    <argument name="use_force" xsi:type="boolean">true</argument>
+                </arguments>
+
+                <block class="Magento\Framework\View\Element\Html\Links" name="top.links.trgovine">
+                    <arguments>
+                        <argument name="css_class" xsi:type="string">header links</argument>
+                    </arguments>
+
+                    <block class="Magento\Wishlist\Block\Link" name="wish-list-link.trgovine" before="-"/>
+                    <block class="Magento\Customer\Block\Account\AuthorizationLink" name="authorization-link-login.trgovine" template="account/link/authorization.phtml"
+                           before="register-link.trgovine"/>
+                    <block class="Magento\Customer\Block\Account\RegisterLink" name="register-link.trgovine" after="-">
+                        <arguments>
+                            <argument name="label" xsi:type="string" translate="true">Create an Account</argument>
+                        </arguments>
+                    </block>
+
+                <!--my account-->
+                    <block class="Magento\Customer\Block\Account\Link" name="my-account-link.trgovine" after="catalog.compare.link.trgovine">
+                        <arguments>
+                            <argument name="label" xsi:type="string" translate="true">My Account</argument>
+                        </arguments>
+                    </block>
+                <!--my account-->
+
+                <!--compare-->
+                    <block class="Magento\Framework\View\Element\Template" name="catalog.compare.link.trgovine" after="wish-list-link.trgovine"
+                           template="Magento_Catalog::product/compare/link.phtml">
+                        <arguments>
+                            <argument name="jsLayout" xsi:type="array">
+                                <item name="components" xsi:type="array">
+                                    <item name="compareProducts" xsi:type="array">
+                                        <item name="component" xsi:type="string">Magento_Catalog/js/view/compare-products</item>
+                                    </item>
+                                </item>
+                            </argument>
+                        </arguments>
+                    </block>
+                <!--compare-->
+                </block>
+        </block>
         </referenceBlock>
+    <!--/add wishlist and my account links to the mobile menu -->
 
+    <!--remove the welcome message and the customer block to make room for our blocks-->
         <referenceBlock name="customer" remove="true" />
         <referenceBlock name="header" remove="true" />
+    <!--/remove the welcome message and the customer block to make room for our blocks-->
 
-        <move element="header" destination="header.links" before="-"/>
-        <move element="register-link" destination="header.links"/>
+
+        <move element="my-account-link" destination="top.links" before="-"/>
+        <!--<move element="authorization-link-login" destination="top.links" after="-"/>-->
 
         <move element="top.links" destination="header.nav.Dropdown.loggedin" />
-        <move element="my-account-link" destination="top.links" before="-"/>
-        <move element="authorization-link-login" destination="top.links" after="-"/>
 
 
+        <move element="register-link" destination="noviLinkovi" after="-"/>
+        <move element="catalog.compare.link" destination="noviLinkovi" before="-"/>
+        <move element="wish-list-link" destination="noviLinkovi" after="catalog.compare.link"/>
 
-
-        <move element="catalog.compare.link" destination="header.links" before="-"/>
-        <move element="wish-list-link" destination="header.links" after="catalog.compare.link"/>
     </body>
 </page>
